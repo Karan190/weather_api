@@ -8,6 +8,11 @@ const port = 3000;
 // Middleware to parse JSON request body
 app.use(bodyParser.json());
 
+// Function to convert temperature from Kelvin to Celsius
+function kelvinToCelsius(kelvin) {
+    return kelvin - 273.15;
+  }
+
 // Webhook endpoint to receive weather data by city name
 app.post('/webhook/weather', async (req, res) => {
   try {
@@ -18,12 +23,15 @@ app.post('/webhook/weather', async (req, res) => {
     // Make a GET request to the OpenWeatherMap API
     const response = await axios.get(apiUrl);
 
+    const temperatureKelvin = response.data.main.temp;
+    const temperatureCelsius = kelvinToCelsius(temperatureKelvin);
+
     // Extract the relevant data from the API response
     const weatherData = {
       city: response.data.name,
-      temperature: response.data.main.temp,
+      temperature: `${temperatureCelsius.toFixed(2)} °C`,
       weather: response.data.weather[0].main,
-      description: response.data.weather[0].description,
+      
     };
 
     res.json(weatherData);
