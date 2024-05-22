@@ -29,7 +29,7 @@ app.post('/webhook/weather', async (req, res) => {
     // Extract the relevant data from the API response
     const weatherData = {
       city: response.data.name,
-      temperature: `${temperatureCelsius.toFixed(2)}`,
+      temperature: temperatureCelsius.toFixed(2),
       weather: response.data.weather[0].main,
       
     };
